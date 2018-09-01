@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	else {
-		attackCount = 10;
+		attackCount = -1;
 	}
 
 	unsigned int now = (unsigned int)time( 0 );
@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
 
 	ret_val = attack_main(argv[1], attackCount);
 
+	printf("%s is finnished.", argv[0]);
 	return ret_val;
 }
 
@@ -130,13 +131,22 @@ int attack_main(char targetHost[], int attackCount)
 	int i;
 	int requestArray_size;
 	int sendBytes_size;
+	int LOOP_FLAG;
 
 	requestArray_size = sizeof(requestArray) / sizeof(requestArray[0]);
 	sendBytes_size = sizeof(sendBytes) / sizeof(sendBytes[0]);
 
 	printf("TargetHost is %s\n", targetHost);
 
-	for (i = 0; i < attackCount; i++)
+	if (attackCount == -1) {
+		LOOP_FLAG = 1;
+	}
+	else
+	{
+		LOOP_FLAG = 0;
+	}
+
+	for (i = 0; i < attackCount || LOOP_FLAG; i++)
 	{
 		ipv4_addr_generate(addr);
 

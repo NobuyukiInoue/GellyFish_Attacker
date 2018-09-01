@@ -188,8 +188,3 @@ sub get_PortNum()
 
     return $portNum;
 }
-
-sub get_sendBytes()
-{
-
-}

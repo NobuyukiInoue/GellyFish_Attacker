@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use File::Basename;
+use POSIX 'strftime';
 use strict;
 use warnings;
 use Time::HiRes 'sleep';
@@ -36,7 +37,8 @@ sub monitor()
     #for (my $count = 0; $count < 1000; $count++ ) {
     while(1) {
         &locate(1,1);
-        my $localtime = localtime;
+        #my $localtime = strftime("%Y/%m/%d %H:%M:%S", localtime);
+        my $localtime = strftime("%Y/08/%d %H:%M:%S", localtime);
         print($localtime);
 
         my $i;
@@ -45,32 +47,42 @@ sub monitor()
         &locate(2,1);
         set_BackColor("green", "JellyFisy");
 
-        for ($i = 1; $i <= 20; $i++ ) {
+        for ($i = 1; $i <= 10; $i++ ) {
             &locate(2 + $i, 1);
             $tempStr = sprintf("JellyFish:%d ----", get_PortNum());
             set_ForeColor("green", $tempStr);
         }
 
-        &locate(2,30);
-        set_BackColor("yellow", "Proxy");
+        &locate(2,25);
+        set_BackColor("sky", "Proxy-Step1");
 
-        for ($i = 1; $i <= 50; $i++ ) {
+        for ($i = 1; $i <= 20; $i++ ) {
             &locate(2 + $i, 20);
-            set_ForeColor("green", "+----");
+            set_ForeColor("sky", "+---");
         }
 
+        for ($i = 1; $i <= 20; $i++ ) {
+            &locate(2 + $i, 25);
+            $tempStr = sprintf("Proxy%03d:%5d ---+--- ", $i, get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
+            set_ForeColor("sky", $tempStr);
+            #set_BackColor("sky", $tempStr);
+        }
+
+        &locate(2,48);
+        set_BackColor("yellow", "Proxy-Step2");
+
         for ($i = 1; $i <= 50; $i++ ) {
-            &locate(2 + $i, 30);
+            &locate(2 + $i, 48);
             $tempStr = sprintf("Proxy%03d:%5d ---(%6d Bytes)--> ", $i, get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
             set_ForeColor("yellow", $tempStr);
             #set_BackColor("yellow", $tempStr);
         }
 
-        &locate(2,70);
+        &locate(2,85);
         set_BackColor("red", $targetHostName);
 
         for ($i = 1; $i <= 50; $i++ ) {
-            &locate(2 + $i, 70);
+            &locate(2 + $i, 85);
             set_ForeColor("red", $targetHostName.":".$targetPort);
             #set_BackColor("red", $targetHostName);
         }
@@ -132,7 +144,7 @@ sub set_ForeColor {
     elsif ($_[0] eq  "yellow") {
         printf("\e[33m%s\e[m", $_[1]);
     }
-    elsif ($_[0] eq  "bule") {
+    elsif ($_[0] eq  "blue") {
         printf("\e[34m%s\e[m", $_[1]);
     }
     elsif ($_[0] eq  "magenta") {
@@ -162,7 +174,7 @@ sub set_BackColor {
     elsif ($_[0] eq  "yellow") {
         printf("\e[43m%s\e[m", $_[1]);
     }
-    elsif ($_[0] eq  "bule") {
+    elsif ($_[0] eq  "blue") {
         printf("\e[44m%s\e[m", $_[1]);
     }
     elsif ($_[0] eq  "magenta") {

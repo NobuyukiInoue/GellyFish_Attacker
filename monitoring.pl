@@ -25,6 +25,10 @@ else {
 
 sub monitor()
 {
+    use constant STEP0_MAX => 10;
+    use constant STEP1_MAX => 20;
+    use constant STEP2_MAX => 50;
+
     my @sendBytes = (
         32, 48, 64, 72, 96, 128, 144, 192, 224, 240,
         256, 512, 1024, 1200, 1216, 1220, 1320, 1440,
@@ -34,21 +38,31 @@ sub monitor()
 
     my $sendBytes_Length = @sendBytes;
 
-    #for (my $count = 0; $count < 1000; $count++ ) {
+    my @step1_hosts;
+    my @step2_hosts;
+
+    my $i;
+    for ($i = 0; $i < STEP1_MAX; $i++) {
+        $step1_hosts[${i}] = get_ipaddr();
+    }
+
+    for ($i = 0; $i < STEP2_MAX; $i++) {
+        $step2_hosts[${i}] = get_ipaddr();
+    }
+
     while(1) {
         &locate(1,1);
         #my $localtime = strftime("%Y/%m/%d %H:%M:%S", localtime);
         my $localtime = strftime("%Y/08/%d %H:%M:%S", localtime);
         print($localtime);
 
-        my $i;
         my $tempStr;
 
         &locate(2,1);
         set_BackColor("green", "JellyFisy");
 
-        for ($i = 1; $i <= 10; $i++ ) {
-            &locate(2 + $i, 1);
+        for ($i = 0; $i < STEP0_MAX; $i++ ) {
+            &locate(3 + $i, 1);
             $tempStr = sprintf("JellyFish:%d ----", get_PortNum());
             set_ForeColor("green", $tempStr);
         }
@@ -56,33 +70,35 @@ sub monitor()
         &locate(2,25);
         set_BackColor("sky", "Proxy-Step1");
 
-        for ($i = 1; $i <= 20; $i++ ) {
-            &locate(2 + $i, 20);
+        for ($i = 0; $i < STEP1_MAX; $i++ ) {
+            &locate(3 + $i, 20);
             set_ForeColor("sky", "+---");
         }
 
-        for ($i = 1; $i <= 20; $i++ ) {
-            &locate(2 + $i, 25);
-            $tempStr = sprintf("Proxy%03d:%5d ---+--- ", $i, get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
+        for ($i = 0; $i < STEP1_MAX; $i++ ) {
+            &locate(3 + $i, 25);
+            #$tempStr = sprintf("Proxy%03d:%5d ---+--- ", $i, get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
+            $tempStr = sprintf("%-15s:%5d ---+--- ", $step1_hosts[${i}], get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
             set_ForeColor("sky", $tempStr);
             #set_BackColor("sky", $tempStr);
         }
 
-        &locate(2,48);
+        &locate(2,56);
         set_BackColor("yellow", "Proxy-Step2");
 
-        for ($i = 1; $i <= 50; $i++ ) {
-            &locate(2 + $i, 48);
-            $tempStr = sprintf("Proxy%03d:%5d ---(%6d Bytes)--> ", $i, get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
+        for ($i = 0; $i < STEP2_MAX; $i++ ) {
+            &locate(3 + $i, 56);
+            #$tempStr = sprintf("Proxy%03d:%5d ---(%6d Bytes)--> ", $i, get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
+            $tempStr = sprintf("%-15s:%5d ---(%6d Bytes)--> ", $step2_hosts[${i}], get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
             set_ForeColor("yellow", $tempStr);
             #set_BackColor("yellow", $tempStr);
         }
 
-        &locate(2,85);
+        &locate(2, 100);
         set_BackColor("red", $targetHostName);
 
-        for ($i = 1; $i <= 50; $i++ ) {
-            &locate(2 + $i, 85);
+        for ($i = 1; $i <= STEP2_MAX; $i++ ) {
+            &locate(2 + $i, 100);
             set_ForeColor("red", $targetHostName.":".$targetPort);
             #set_BackColor("red", $targetHostName);
         }
@@ -199,4 +215,9 @@ sub get_PortNum()
     }
 
     return $portNum;
+}
+
+sub get_ipaddr()
+{
+    return( (int(rand(255))+1) . "." . (int(rand(255))+1) . "." . (int(rand(255))+1) . "." . (int(rand(255))+1) );
 }

@@ -219,5 +219,15 @@ sub get_PortNum()
 
 sub get_ipaddr()
 {
-    return( (int(rand(255))+1) . "." . (int(rand(255))+1) . "." . (int(rand(255))+1) . "." . (int(rand(255))+1) );
+    my @ipaddr;
+
+    for (my $i = 0; $i < 4; $i++) {
+        $ipaddr[${i}] = int(rand(255)) + 1;
+
+        if ( $i == 0 && $ipaddr[${i}] > 223) {
+            $i--;
+        }
+    }
+
+    return( $ipaddr[0] . "." . $ipaddr[1] . "." . $ipaddr[2] . "." . $ipaddr[3] );
 }

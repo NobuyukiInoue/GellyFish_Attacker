@@ -58,6 +58,9 @@ void ipv4_addr_generate(int addr[4])
 
 	for (i = 0; i < LEN_IPv4; i++) {
 		addr[i] = rand()%255 + 1;
+		if (addr[i] > 223) {
+			i--;
+		}
 	}
 }
 

@@ -78,7 +78,7 @@ sub monitor()
         for ($i = 0; $i < STEP1_MAX; $i++ ) {
             &locate(3 + $i, 25);
             #$tempStr = sprintf("Proxy%03d:%5d ---+--- ", $i, get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
-            $tempStr = sprintf("%-15s:%5d ---+--- ", $step1_hosts[${i}], get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
+            $tempStr = sprintf("%-15s:%5d ---+--- ", $step1_hosts[${i}], get_PortNum(), $sendBytes[int(rand($sendBytes_Length))] );
             set_ForeColor("sky", $tempStr);
             #set_BackColor("sky", $tempStr);
         }
@@ -89,7 +89,7 @@ sub monitor()
         for ($i = 0; $i < STEP2_MAX; $i++ ) {
             &locate(3 + $i, 56);
             #$tempStr = sprintf("Proxy%03d:%5d ---(%6d Bytes)--> ", $i, get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
-            $tempStr = sprintf("%-15s:%5d ---(%6d Bytes)--> ", $step2_hosts[${i}], get_PortNum(), @sendBytes[int(rand($sendBytes_Length))] );
+            $tempStr = sprintf("%-15s:%5d ---(%6d Bytes)--> ", $step2_hosts[${i}], get_PortNum(), $sendBytes[int(rand($sendBytes_Length))] );
             set_ForeColor("yellow", $tempStr);
             #set_BackColor("yellow", $tempStr);
         }
